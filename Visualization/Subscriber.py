@@ -38,13 +38,14 @@ def on_message(client, userdata, msg): # Func for receiving msgs
             if key == "LED":
                 sensor_data["led"] = t["LED"]
             if key == "Alert":
-               sensor_data["Alert"] = t["Safety_Alert_System"]
+                sensor_data["Alert"] = t["Safety_Alert_System"]
+
 
 mqtt_subscriber= paho.Client()
 mqtt_subscriber.on_message= on_message
 mqtt_subscriber.on_connect= on_connect
 
-mqtt_subscriber.connect("192.168.0.145", 1883, 60)
+mqtt_subscriber.connect('192.168.0.145', 1883, 70)
   
 mqtt_subscriber.loop_start()
 while 1 == 1:
@@ -66,8 +67,7 @@ while 1 == 1:
         #Servo = str(sensor_data["servo"])
         #Fan = str(sensor_data["fan"])
         #Safetyalertsystem = str(sensor_data["Alert"])
-        data = [time() * 1000, Temperature, Humidity, Airquality, Light] #, Fan, LED, Servo, Safetyalertsystem]
-        print("TEMP=", Temperature, "HUM=", Humidity)
+        data = [time() * 1000, Temperature, Humidity, Airquality, Light, Fan, LED, Servo, Safetyalertsystem]
 
         response = make_response(json.dumps(data))
 
