@@ -24,8 +24,8 @@ servo1.start(0)         # Start PWM running, with value of 0 (pulse off)
 
 def setangle(angle):
    servo1.ChangeDutyCycle(2+(angle/18))
-            time.sleep(10)
-            servo1.ChangeDutyCycle(0)  
+   time.sleep(10)
+   servo1.ChangeDutyCycle(0)  
             
 def US_S1(dist_1):
     print(dist_1,'cm')
@@ -56,7 +56,5 @@ def on_message(client, userdata, msg):                      # Func for receiving
 mqttc = paho.Client()                                       # mqttc object
 mqttc.on_connect = on_connect                               # assign on_connect func
 mqttc.on_message = on_message                               # assign on_message func
-mqttc.connect("mqtt.eclipseprojects.io", 1883, keepalive=60)               # connect to aws server
+mqttc.connect("192.168.0.145", 1883, keepalive=60)          # connect to pi
 mqttc.loop_start()                                          # Start receiving in loop
-
-US_bin_selection(biodist, biobin)

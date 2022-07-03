@@ -139,4 +139,3 @@ while 1==1:
 		print(paylodmsg_json)
 	else:
 		print("waiting for connection...")
-		

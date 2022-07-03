@@ -21,7 +21,7 @@ def on_message(client, userdata, msg):                      # Func for Sending m
 mqttc = paho.Client()                                       # mqttc object
 mqttc.on_connect = on_connect                               # assign on_connect func
 mqttc.on_message = on_message                               # assign on_message func
-mqttc.connect("mqtt.eclipseprojects.io", 1883, keepalive=60)               # connect to aws server
+mqttc.connect("192.168.0.145", 1883, keepalive=60)          # connect to pi
 mqttc.loop_start() 
 
 pir_sensor = 8
@@ -37,17 +37,17 @@ motion = 0
 percentage = 0
 
 def US_S1(dist_1):
-        print(dist_1,'cm')
+    print(dist_1,'cm')
 		 	
 def US_bin_selection(dist):                                          #Read distance value from Ultrasonic
-        print("Bin Distance=" , dist, "cm")
+	print("Bin Distance=" , dist, "cm")
 	percentage = 100 * (6 - dist)/6
 	print("Bin Status=" , percentage, "%")
 	if percentage >= 80:
 		print("Bin is 80% full, Please change the Bin!")
    	
 def PIR(motion):
-        motion = digitalRead(pir_sensor)
+    motion = digitalRead(pir_sensor)
 	try:
 		if motion==0 or motion==1:	# check if reads were 0 or 1 it can be 255 also because of IO Errors so remove those values
 			if motion==1:

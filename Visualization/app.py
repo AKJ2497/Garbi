@@ -44,7 +44,7 @@ mqtt_subscriber= paho.Client()
 mqtt_subscriber.on_message= on_message
 mqtt_subscriber.on_connect= on_connect
 
-mqtt_subscriber.connect("mqtt.eclipseprojects.io", 1883, 60)
+mqtt_subscriber.connect("192.168.0.145", 1883, 60)
   
 mqtt_subscriber.loop_start()
 while 1 == 1:
