@@ -1,40 +1,62 @@
+import time
+from datetime import datetime
 import paho.mqtt.client as paho
-import os
-import socket
-import ssl
 import json
-from time import sleep
 import RPi.GPIO as GPIO
-from rpi_ws281x import *
-import argparse
+from grovepi import *
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(23,GPIO.OUT)
-pwm=GPIO.PWM(17, 50)
-pwm.start(0)
-emp_count = set()
+ultra_1 = 4
+ultra_2 = 6
 
-def SetAngle(angle):
-	duty = (angle / 18) + 2
-	GPIO.output(17, True)
-	pwm.ChangeDutyCycle(duty)
+percentage = 0
+biodist = 0
+biobin = 0
+nonbiodist = 0
+nonbiobin = 0
+a = 0
+angle = 90
+percentage = 0
 
-def fan(speed):
-    print("Fan :"+str(speed))
+GPIO.setmode(GPIO.BOARD)  # Set GPIO numbering mode
+GPIO.setup(11,GPIO.OUT)   # Set pin 11 as an output, and define as servo1 as PWM pin
+servo1 = GPIO.PWM(11,50) # pin 11 for servo1, pulse 50Hz
+servo1.start(0)         # Start PWM running, with value of 0 (pulse off)
+
+def setangle(angle):
+   servo1.ChangeDutyCycle(2+(angle/18))
+            time.sleep(10)
+            servo1.ChangeDutyCycle(0)  
+            
+def US_S1(dist_1):
+    print(dist_1,'cm')
+		 	
+def US_bin_selection(dist, percentage):                                #Read distance value from Ultrasonic
+    print("Bin Distance=" , dist, "cm")
+    percentage = 100 * (6 - dist)/6
+    print("Bin Status=" , percentage, "%")
+    if percentage >= 80:
+	    print("Bin is 80% full, Please change the Bin!")
+
+def on_connect(client, userdata, flags, rc):                # func for making connection
+    print("Connection returned result: " + str(rc) )
+    # Subscribing in on_connect() means that if we lose the connection and
+    # reconnect then subscriptions will be renewed.
+    client.subscribe("Actions" , 1 )                       # Subscribe to "Actions" topic
+
+def on_message(client, userdata, msg):                      # Func for receiving msgs
+    act = json.loads(str(msg.payload.decode("utf-8")))
+    for key, value in act.items():
+        if key == "Fan":
+            fan(value)
+        if key == "Servo":
+            servo(value)
+        if key == "LED":
+            led(value)        
     
-    if(str(speed)=='off'):
-        GPIO.output(23,GPIO.OFF)    
-    if(str(speed)=='low'):
-        GPIO.output(23,GPIO.LOW)
-    if(str(speed)=='medium'):
-        GPIO.output(23,GPIO.MEDIUM)
-    if(str(speed)=='high'):
-        GPIO.output(23,GPIO.HIGH)
-    
-def servo(state):
-    print("Servo :"+str(state))
-    if(str(state)=='off'):
-        SetAngle(0) 
-        
-    if(str(state)=='on'):
-        SetAngle(180) 
+mqttc = paho.Client()                                       # mqttc object
+mqttc.on_connect = on_connect                               # assign on_connect func
+mqttc.on_message = on_message                               # assign on_message func
+mqttc.connect("mqtt.eclipseprojects.io", 1883, keepalive=60)               # connect to aws server
+mqttc.loop_start()                                          # Start receiving in loop
+
+US_bin_selection(biodist, biobin)

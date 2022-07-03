@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.co m/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
 
 
@@ -29,31 +29,34 @@
 </head>
 
 <body>
+<body style="background-color:#90ee90">
 
     <div class="jumbotron">
-        <center><h1>GARBI - Smart Garbage Segregator Plant</h1></center>
+        <center><h1> GARBI - Smart Garbage Segregator Plant </h1></center>
     </div>
     <br>
-    <br>
-    <div class="container-fluid">
 
+    <div class="container-fluid">
+</div>
         <div class="row">
 
-            <div class="col-5 jumbotron p-2 mx-1">
-                <h1 class="sensor1"> Temperature : </h1>
+            <div class="col-7 jumbotron p-2 mx-1">
+                <h1 class="sensor1">Bio Bin Status : </h1>
                 <br>
-                <h1 class="sensor2"> Humidity : </h1>
+                <h1 class="sensor2"> Temperature : </h1>
                 <br>
-                <h1 class="sensor3"> Air Quality : </h1>
+                <h1 class="sensor3"> Humidity : </h1>
+                <br>
+                <h1 class="sensor4"> Air Quality : </h1>
             </div>
             <br>
 
-            <div class="col-5 jumbotron p-2 mx-1">
+            <div class="col-7 jumbotron p-2 mx-1">
+                <h1 class="sensor0"> Non-Bio Bin Status : </h1>
+                <br>
                 <h1 class="actuator1"> HVAC Exhaust Fan : </h1>
                 <br>
                 <h1 class="actuator2"> Safety Alert System : </h1>
-                <br>
-                <h1 class="actuator3"> Garbage Bin Type  : </h1>
             </div>
             <br>
 
@@ -64,8 +67,8 @@
     <style>
 
         .jumbotron{
-            widows: 150px;
-            height: 220px;
+            widows: 175px;
+            height: 300px;
             justify-content: center;
         }
 
@@ -156,14 +159,14 @@
                 chartTemperatue.series[0].addPoint(data1, true, shiftTemperature);
                 chartHumidity.series[0].addPoint(data2, true, shiftHumidity);
                 chartLight.series[0].addPoint(data3, true, shiftLight);
-                $(".sensor1").text("");
-                $(".sensor1").text("Temperature : " +  Math.round(data1[1]) );
-
                 $(".sensor2").text("");
-                $(".sensor2").text("Humidity : " +  Math.round(data2[1]) );
+                $(".sensor2").text("Temperature : " +  Math.round(data1[1]) );
 
                 $(".sensor3").text("");
-                $(".sensor3").text("Light Intensity : " +  Math.round(data3[1]) );
+                $(".sensor3").text("Humidity : " +  Math.round(data2[1]) );
+
+                $(".sensor4").text("");
+                $(".sensor4").text("Air Quality : " +  Math.round(data3[1]) );
 
                 $(".actuator1").text("");
                 $(".actuator1").text("Fan : " +  result[4] );

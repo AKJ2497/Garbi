@@ -21,7 +21,7 @@ def on_message(client, userdata, msg):                      # Func for Sending m
 mqttc = paho.Client()                                       # mqttc object
 mqttc.on_connect = on_connect                               # assign on_connect func
 mqttc.on_message = on_message                               # assign on_message func
-mqttc.connect("192.168.0.145", 1883, keepalive=60)               # connect to aws server
+mqttc.connect("mqtt.eclipseprojects.io", 1883, keepalive=60)               # connect to aws server
 mqttc.loop_start() 
 
 pir_sensor = 8
@@ -33,23 +33,8 @@ dht_sensor = 7
 pinMode(pir_sensor,"INPUT")
 pinMode(led,"OUTPUT")
 
-motion=0
+motion = 0
 percentage = 0
-bio = 0
-nonbio = 0
-a = 0
-angle = 90
-
-# Set GPIO numbering mode
-GPIO.setmode(GPIO.BOARD)
-
-# Set pin 11 as an output, and define as servo1 as PWM pin
-GPIO.setup(11,GPIO.OUT)
-servo1 = GPIO.PWM(11,50) # pin 11 for servo1, pulse 50Hz
-
-# Start PWM running, with value of 0 (pulse off)
-servo1.start(0)
-
 
 def US_S1(dist_1):
         print(dist_1,'cm')
@@ -83,15 +68,15 @@ while 1==1:
 	if connflag == True:
 		now = datetime.now()
 		dt_string=now.strftime("%d/%m/%Y %H:%M:%S")
-		distance = ultrasonicRead(ultra_1)
-		bin_depth = ultrasonicRead(ultra_2)
+		#distance = ultrasonicRead(ultra_1)
+		#bin_depth = ultrasonicRead(ultra_2)
 		temp_value = random.randint(20,150)
 		hum_value = random.randint(0,50)
 		airquality = random.randint(20,100)
 	
 		PIR(pir_sensor)
-		US_S1(distance)
-		US_bin_selection(bin_depth)
+		#US_S1(distance)
+		#US_bin_selection(bin_depth)
 	
 		#[ temp_value,hum_value ] = dht(dht_sensor,0)
 		#time.sleep(1)

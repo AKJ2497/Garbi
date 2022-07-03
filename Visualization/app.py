@@ -44,7 +44,7 @@ mqtt_subscriber= paho.Client()
 mqtt_subscriber.on_message= on_message
 mqtt_subscriber.on_connect= on_connect
 
-mqtt_subscriber.connect("192.168.0.145", 1883, 60)
+mqtt_subscriber.connect("mqtt.eclipseprojects.io", 1883, 60)
   
 mqtt_subscriber.loop_start()
 while 1 == 1:
@@ -63,10 +63,10 @@ while 1 == 1:
         Airquality = int(sensor_data["airquality"])
         Light = int(sensor_data["light"])
         #LED = str(sensor_data["led"])
-        #Servo = str(sensor_data["servo"])
-        #Fan = str(sensor_data["fan"])
-        #Safetyalertsystem = str(sensor_data["Alert"])
-        data = [time() * 1000, Temperature, Humidity, Airquality, Light] #, Fan, LED, Servo, Safetyalertsystem]
+        Servo = str(sensor_data["servo"])
+        Fan = str(sensor_data["fan"])
+        Safetyalertsystem = str(sensor_data["Alert"])
+        data = [time() * 1000, Temperature, Humidity, Airquality, Light, Fan, Servo, Safetyalertsystem]
         print("TEMP=", Temperature, "HUM=", Humidity)
 
         response = make_response(json.dumps(data))
