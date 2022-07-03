@@ -25,6 +25,7 @@ GPIO.setmode(GPIO.BOARD)  # Set GPIO numbering mode
 GPIO.setup(11,GPIO.OUT)   # Set pin 11 as an output, and define as servo1 as PWM pin
 servo1 = GPIO.PWM(11,50) # pin 11 for servo1, pulse 50Hz
 servo1.start(0)         # Start PWM running, with value of 0 (pulse off)
+	
 
 def SetAngle(angle):
    servo1.ChangeDutyCycle(2+(angle/18))
@@ -32,7 +33,6 @@ def SetAngle(angle):
    servo1.ChangeDutyCycle(0)  
             
 		 	
-<<<<<<< HEAD
 def Percentage(dist):   
     #Read distance value from Ultrasonic
     percentage = 100 * (6 - dist)/6
@@ -82,3 +82,8 @@ while True:
 
 	except (IOError, TypeError) as e:
 		print ("Error")
+
+
+
+
+  
