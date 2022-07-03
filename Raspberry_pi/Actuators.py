@@ -30,9 +30,7 @@ def SetAngle(angle):
    servo1.ChangeDutyCycle(2+(angle/18))
    time.sleep(5)
    servo1.ChangeDutyCycle(0)  
-            
-		 	
-<<<<<<< HEAD
+
 def Percentage(dist):   
     #Read distance value from Ultrasonic
     percentage = 100 * (6 - dist)/6

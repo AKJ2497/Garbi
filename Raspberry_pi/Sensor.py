@@ -13,7 +13,7 @@ def on_connect(client, userdata, flags, rc):                # func for making co
     global connflag
     print ("Connected to Pi")
     connflag = True
-    print("Connection returned result: " + str(rc) )
+    print("Connection returned result: " + str(rc))
  
 def on_message(client, userdata, msg):                      # Func for Sending msg
     print(msg.topic+" "+str(msg.payload))
@@ -26,58 +26,38 @@ mqttc.loop_start()
 
 pir_sensor = 8
 led = 5
-ultra_1 = 4
-ultra_2 = 6
 dht_sensor = 7
 
 pinMode(pir_sensor,"INPUT")
 pinMode(led,"OUTPUT")
 
 motion = 0
-percentage = 0
 
-def US_S1(dist_1):
-    print(dist_1,'cm')
-		 	
-def US_bin_selection(dist):                                          #Read distance value from Ultrasonic
-	print("Bin Distance=" , dist, "cm")
-	percentage = 100 * (6 - dist)/6
-	print("Bin Status=" , percentage, "%")
-	if percentage >= 80:
-		print("Bin is 80% full, Please change the Bin!")
-   	
 def PIR(motion):
-    motion = digitalRead(pir_sensor)
+	motion = digitalRead(pir_sensor)
 	try:
 		if motion==0 or motion==1:	# check if reads were 0 or 1 it can be 255 also because of IO Errors so remove those values
 			if motion==1:
 				print ('Human Motion Detected')
 				digitalWrite(led,1)
 				time.sleep(0.5) #turn on lights when human is present
-
 			else:
 				print ('-')
 				digitalWrite(led,0) #turn off lights
-		
 	except KeyboardInterrupt:
 		digitalWrite(led,0) 
-
 
 while 1==1:
 	time.sleep(5)
 	if connflag == True:
 		now = datetime.now()
 		dt_string=now.strftime("%d/%m/%Y %H:%M:%S")
-		#distance = ultrasonicRead(ultra_1)
-		#bin_depth = ultrasonicRead(ultra_2)
 		temp_value = random.randint(20,150)
 		hum_value = random.randint(0,50)
 		airquality = random.randint(20,100)
 	
 		PIR(pir_sensor)
-		#US_S1(distance)
-		#US_bin_selection(bin_depth)
-	
+
 		#[ temp_value,hum_value ] = dht(dht_sensor,0)
 		#time.sleep(1)
 		t=str(temp_value)
@@ -124,4 +104,3 @@ while 1==1:
 		print(paylodmsg_json)
 	else:
 		print("waiting for connection...")
-		
