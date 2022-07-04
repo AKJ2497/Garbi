@@ -40,35 +40,35 @@ while True:
 	try:
 		dist_1 = ultrasonicRead(ultra_1)
 		print("Distance",dist_1)
-        	if dist_1 <= 4:
+		if dist_1 <= 4:
 			relay_on(1)
 			relay_on(2)
 			a = random.randint(0,1)
 			print("a=",a)
 			if a%2 == 0:
 				angle = 0
-                		SetAngle(angle)
+				SetAngle(angle)
 				time.sleep(3)
 				biodist = ultrasonicRead(ultra_2)
- 				print("Bio Distance=", biodist)
+				print("Bio Distance=", biodist)
 				biostatus = Percentage(biodist)
 				print("Bio Status=", biostatus, "%")
 				if biostatus >= 80:
-	    				print("Bio Bin is 80% full, Please change the Bio Bin!")
+					print("Bio Bin is 80% full, Please change the Bio Bin!")
 				time.sleep(3)
-    
-            		else:
-                		angle = 180
-                		SetAngle(angle)  
+				
+			else:
+				angle = 180
+				SetAngle(angle)
 				time.sleep(3)
 				non_biodist = ultrasonicRead(ultra_2)
 				print("Non-Bio Distance=", non_biodist)
 				non_biostatus = Percentage(non_biodist)
 				print("Non-Bio status=", non_biostatus, "%")
 				if non_biostatus >= 80:
-	    				print("Non-Bio Bin is 80% full, Please change the Non-Bio Bin!")
+					print("Non-Bio Bin is 80% full, Please change the Non-Bio Bin!")
 				time.sleep(3)
-
+		
 		else:
 			relay_off(1)
 			relay_off(2)
@@ -79,4 +79,4 @@ while True:
 		break
 
 	except (IOError, TypeError) as e:
-		print ("Error")
+		print("Error")

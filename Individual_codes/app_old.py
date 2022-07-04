@@ -1,5 +1,5 @@
 from flask import Flask, make_response, render_template, url_for, request, redirect
-import paho.mqtt.client as paho
+#import paho.mqtt.client as paho
 import json
 import time
 from time import time
@@ -63,12 +63,10 @@ while 1 == 1:
         Airquality = int(sensor_data["airquality"])
         Light = int(sensor_data["light"])
         #LED = str(sensor_data["led"])
-        #Servo = str(sensor_data["servo"])
-        #Fan = str(sensor_data["fan"])
-        #Safetyalertsystem = str(sensor_data["Alert"])
-        #data = [time() * 1000, Temperature, Humidity, Airquality, Light, Fan, Servo, Safetyalertsystem]
-
-        data = [time() * 1000, Temperature, Humidity, Airquality, Light]
+        Servo = str(sensor_data["servo"])
+        Fan = str(sensor_data["fan"])
+        Safetyalertsystem = str(sensor_data["Alert"])
+        data = [time() * 1000, Temperature, Humidity, Airquality, Light, Fan, Servo, Safetyalertsystem]
         print("TEMP=", Temperature, "HUM=", Humidity)
 
         response = make_response(json.dumps(data))

@@ -33,17 +33,17 @@ servo1.start(0)
 
 
 def US_S1(dist_1):
-        print(dist_1,'cm')
+	print(dist_1,'cm')
 		 	
-def US_bin_selection(dist):                                          #Read distance value from Ultrasonic
-        print("Bin Distance=" , dist, "cm")
+def US_bin_selection(dist):                                         #Read distance value from Ultrasonic
+	print("Bin Distance=" , dist, "cm")
 	percentage = 100 * (6 - dist)/6
 	print("Bin Status=" , percentage, "%")
 	if percentage >= 80:
 		print("Bin is 80% full, Please change the Bin!")
    	
 def PIR(motion):
-        motion = digitalRead(pir_sensor)
+	motion = digitalRead(pir_sensor)
 	try:
 		if motion==0 or motion==1:	# check if reads were 0 or 1 it can be 255 also because of IO Errors so remove those values
 			if motion==1:
@@ -53,8 +53,7 @@ def PIR(motion):
 
 			else:
 				print ('-')
-				digitalWrite(led,0) #turn off lights
-		
+				digitalWrite(led,0) #turn off lights	
 	except KeyboardInterrupt:
 		digitalWrite(led,0) 
 
