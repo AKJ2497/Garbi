@@ -5,7 +5,7 @@ import random
 import time
 import RPi.GPIO as GPIO
 from grovepi import *
-
+import paho.mqtt.client as paho
 import sys
 import time
 from relay_lib_seeed import *
@@ -26,6 +26,28 @@ GPIO.setup(11,GPIO.OUT)   # Set pin 11 as an output, and define as servo1 as PWM
 servo1 = GPIO.PWM(11,50) # pin 11 for servo1, pulse 50Hz
 servo1.start(0)         # Start PWM running, with value of 0 (pulse off)
 
+
+##########################################################################################
+##########  MQTT_PAHO_ICOM     ############
+
+def on_connect(client, userdata, flags, rc):                # func for making connection
+    global connflag
+    print ("Connected to Pi")
+    connflag = True
+    print("Connection returned result: " + str(rc))
+ 
+def on_message(client, userdata, msg):                      # Func for Sending msg
+    print(msg.topic+" "+str(msg.payload))
+ 
+mqttc = paho.Client()                                       # mqttc object
+mqttc.on_connect = on_connect                               # assign on_connect func
+mqttc.on_message = on_message                               # assign on_message func
+mqttc.connect('192.168.0.145',1883,keepalive=60)            # connect to pi
+mqttc.loop_start() 
+
+#########################################################################################
+
+
 def SetAngle(angle):
    servo1.ChangeDutyCycle(2+(angle/18))
    time.sleep(5)
@@ -38,6 +60,8 @@ def Percentage(dist):
                  
 while True:
 	try:
+		now = datetime.now()
+		dt_string=now.strftime("%d/%m/%Y %H:%M:%S")
 		dist_1 = ultrasonicRead(ultra_1)
 		print("Distance",dist_1)
 		if dist_1 <= 4:
@@ -72,6 +96,18 @@ while True:
 		else:
 			relay_off(1)
 			relay_off(2)
+		
+		paylodmsg0 ="{"
+		paylodmsg1 = "\"datetime\": \""
+		paylodmsg2 = "\", \"Bio_Status\":"
+		paylodmsg3 = ", \"Nonbio_Status\":"
+		paylodmsg4 = "}"
+		paylodmsg = "{} {} {} {} {} {} {} {}".format(paylodmsg0, paylodmsg1, dt_string, paylodmsg2, biostatus, paylodmsg3, non_biostatus, paylodmsg4)
+		paylodmsg = json.dumps(paylodmsg) 
+		paylodmsg_json = json.loads(paylodmsg)       
+		mqttc.publish("Actuator_Data", paylodmsg_json , qos=0)        # topic: Sensor_Data # Publishing sensor values
+		print("msg sent: Data sent" ) # Print sent sensor msg on console
+		print(paylodmsg_json)
 
 	except KeyboardInterrupt:
 		relay_off(1)

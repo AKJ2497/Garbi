@@ -9,16 +9,17 @@ sensor_data = {"temp": 0,
                "airquality": 0,
                "light": 0,
                "fan": "off",
-               "led": "0",
+               "led": "ON",
                "bio": 0,
-               "non_bio": 0,
-               "Alert": "All Good"}
+               "nonbio": 0,
+               "alert": str("-")}
 
 app: Flask = Flask(__name__)
 
 def on_connect(client, userdata, flags, rc):  # func for making connection
     print("Connection returned result: " +str(rc))
-    client.subscribe([("Sensor_Data", 1), ("Actions", 1)])
+    #client.subscribe([("Sensor_Data", 1), ("Actuator_Data", 1), ("Actions", 1)])
+    client.subscribe([("Sensor_Data", 1), ("Actuator_Data", 1)])
 
 def on_message(client, userdata, msg): # Func for receiving msgs
     a = msg.topic
@@ -27,7 +28,12 @@ def on_message(client, userdata, msg): # Func for receiving msgs
         sensor_data["temp"] = t["Temperature"]
         sensor_data["humid"] = t["Humidity"]
         sensor_data["airquality"] = t["Air_Quality"]
-        #sensor_data["light"] = t["Light_Status"]
+        
+    if a == "Actuator_Data":
+        t = json.loads(str(msg.payload.decode("utf-8")))
+        sensor_data["bio"] = t["Bio_Status"]
+        sensor_data["nonbio"] = t["Nonbio_Status"]
+    """   
     if a == "Actions":
         t = json.loads(str(msg.payload.decode("utf-8")))
         for key, value in t.items():
@@ -37,8 +43,9 @@ def on_message(client, userdata, msg): # Func for receiving msgs
                 sensor_data["servo"] = t["Servo"]
             if key == "LED":
                 sensor_data["led"] = t["LED"]
-            if key == "Alert":
-               sensor_data["Alert"] = t["Safety_Alert_System"]
+            #if key == "Alert":
+               #sensor_data["Alert"] = t["Safety_Alert_System"]
+    """
 
 mqtt_subscriber= paho.Client()
 mqtt_subscriber.on_message= on_message
@@ -61,22 +68,22 @@ while 1 == 1:
         Temperature = int(sensor_data["temp"])
         Humidity = int(sensor_data["humid"])
         Airquality = int(sensor_data["airquality"])
+        Biobinstatus = int(sensor_data["bio"])
+        Nonbiobinstatus = int(sensor_data["nonbio"])
         Light = int(sensor_data["light"])
         #LED = str(sensor_data["led"])
         #Servo = str(sensor_data["servo"])
         #Fan = str(sensor_data["fan"])
-        #Safetyalertsystem = str(sensor_data["Alert"])
         #data = [time() * 1000, Temperature, Humidity, Airquality, Light, Fan, Servo, Safetyalertsystem]
-
-        data = [time() * 1000, Temperature, Humidity, Airquality, Light]
-        print("TEMP=", Temperature, "HUM=", Humidity)
+        print("TEMP=", Temperature, "HUM=", Humidity, "AQ=", Airquality, "Bio=", Biobinstatus, "Nbio=", Nonbiobinstatus)
+        data = [time() * 1000, Temperature, Humidity, Airquality, Biobinstatus, Nonbiobinstatus, Light]
+        print(data)
 
         response = make_response(json.dumps(data))
 
         response.content_type = 'application/json'
 
         return response
-
 
     if __name__ == "__main__":
         app.run(debug=True)
