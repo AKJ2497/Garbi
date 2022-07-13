@@ -111,7 +111,7 @@ def fan2(mode):
 
 while 1==1:
 	try:
-		time.sleep(2)
+		time.sleep(1)
 		if connflag == True:
 			#PIR(pir_sensor)
 			now = datetime.now()
@@ -162,6 +162,8 @@ while 1==1:
 				digitalWrite(red_led,1)
 				digitalWrite(buzzer,1)
 				time.sleep(2)
+				digitalWrite(red_led,0)
+				digitalWrite(buzzer,0)
 				
 			#Air Quality PDDL
 			if 100 < airquality <=200:
@@ -191,6 +193,8 @@ while 1==1:
 				digitalWrite(red_led,1)
 				digitalWrite(buzzer,1)
 				time.sleep(2)
+				digitalWrite(red_led,0)
+				digitalWrite(buzzer,0)
 
 			#PIR PDDL
 			if motion == 1:
@@ -212,19 +216,7 @@ while 1==1:
 					PIR(0)
 					print('led_off')
 				print(led_action)
-"""
-			if temp_value >= 100:
-				print("Fire in the Garbi Plant: EMERGENCY, RUN FOR YOUR LIFE!") #publish directly to dashboard
-				setRGB(255,0,0)
-				setText("EMERGENCY! FIRE ALERT")
-				time.sleep(1)
-
-			if airquality >= 50:
-				print("Bad Air Quality in the Garbi Plant: EMERGENCY, WEAR MASK") #publish directly to dashboard
-				setRGB(120,135,0)
-				setText("EMERGENCY! BAD AIR QUALITY")
-				time.sleep(1)
-"""
+				
 ###################### PUBLISHING SENSOR AND ACTION DATA TO SUBSCRIBER VIA BROKER PAHO-MQTT #####################################################################################################
 			paylodmsg0 ="{"
 			paylodmsg1 = "\"datetime\": \""
@@ -247,7 +239,6 @@ while 1==1:
 
 	except KeyboardInterrupt:
 		setRGB(0,0,0)
-
 		digitalWrite(led,0)
 		digitalWrite(red_led,0)
 		digitalWrite(buzzer,0)
