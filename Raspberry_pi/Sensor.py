@@ -119,7 +119,7 @@ while 1==1:
 			motion = digitalRead(pir_sensor)
 			temp_value = random.randint(20,150)   #Simulated temperature for worst case situation
 			hum_value = random.randint(0,50)      #Simulated Humidity for worst case situation
-			airquality = random.randint(20,100)	  #Simulated airquality sensor and also for worst case situation		
+			airquality = random.randint(20,300)	  #Simulated airquality sensor and also for worst case situation		
 
 			#[ temp_value,hum_value ] = dht(dht_sensor,0)  # True Temperature and Humidity from DHT sensor
 			#time.sleep(1)
