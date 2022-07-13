@@ -1,8 +1,17 @@
+#########################################################################################################################################
+################################# GARBI-Smart/Intelligent Garbage Segregation plant #####################################################
+### SCIoT GROUP 10 ************** AKSHAY KUMAR JAJU ****************** VEDANT DALVI #####################################################
+#########################################################################################################################################
+# Importing all the libraries
+
 from flask import Flask, make_response, render_template, url_for, request, redirect
 import paho.mqtt.client as paho
 import json
 import time
 from time import time
+
+#########################################################################################################################################
+# Declaring variables and pin-outs
 
 sensor_data = {"temp": 0,
                "humid": 0,
@@ -12,9 +21,14 @@ sensor_data = {"temp": 0,
                "led": "ON",
                "bio": 0,
                "nonbio": 0,
-               "alert": str("-")}
+               "alert": 0 }
+
+#########################################################################################################################################
+# Visualization Start
 
 app: Flask = Flask(__name__)
+
+#################### SUBSCRIBING SENSOR AND ACTION DATA TO SUBSCRIBER VIA BROKER PAHO-MQTT ###############################################
 
 def on_connect(client, userdata, flags, rc):  # func for making connection
     print("Connection returned result: " +str(rc))
@@ -33,19 +47,6 @@ def on_message(client, userdata, msg): # Func for receiving msgs
         t = json.loads(str(msg.payload.decode("utf-8")))
         sensor_data["bio"] = t["Bio_Status"]
         sensor_data["nonbio"] = t["Nonbio_Status"]
-    """   
-    if a == "Actions":
-        t = json.loads(str(msg.payload.decode("utf-8")))
-        for key, value in t.items():
-            if key == "Fan":
-                sensor_data["fan"] = t["Fan"]
-            if key == "Servo":
-                sensor_data["servo"] = t["Servo"]
-            if key == "LED":
-                sensor_data["led"] = t["LED"]
-            #if key == "Alert":
-               #sensor_data["Alert"] = t["Safety_Alert_System"]
-    """
 
 mqtt_subscriber= paho.Client()
 mqtt_subscriber.on_message= on_message
@@ -54,6 +55,9 @@ mqtt_subscriber.on_connect= on_connect
 mqtt_subscriber.connect("192.168.0.145", 1883, 60)
   
 mqtt_subscriber.loop_start()
+#############################################################################################################################################
+# Rendering of Dashboard
+
 while 1 == 1:
     @app.route('/', methods=["GET", "POST"])
     def main():
@@ -71,8 +75,6 @@ while 1 == 1:
         Biobinstatus = int(sensor_data["bio"])
         Nonbiobinstatus = int(sensor_data["nonbio"])
         Light = int(sensor_data["light"])
-        #LED = str(sensor_data["led"])
-        #Servo = str(sensor_data["servo"])
         #Fan = str(sensor_data["fan"])
         #data = [time() * 1000, Temperature, Humidity, Airquality, Light, Fan, Servo, Safetyalertsystem]
         print("TEMP=", Temperature, "HUM=", Humidity, "AQ=", Airquality, "Bio=", Biobinstatus, "Nbio=", Nonbiobinstatus)
