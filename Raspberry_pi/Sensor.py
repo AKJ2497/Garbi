@@ -113,7 +113,7 @@ while 1==1:
 	try:
 		time.sleep(1)
 		if connflag == True:
-			#PIR(pir_sensor)
+			PIR(pir_sensor)
 			now = datetime.now()
 			dt_string=now.strftime("%d/%m/%Y %H:%M:%S")
 			motion = digitalRead(pir_sensor)
