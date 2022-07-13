@@ -1,0 +1,1 @@
+(switchofffan1 temp_low t_low t_low)

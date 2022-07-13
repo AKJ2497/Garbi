@@ -239,8 +239,9 @@ while 1==1:
 
 	except KeyboardInterrupt:
 		setRGB(0,0,0)
+		setText(' ')
 		digitalWrite(led,0)
 		digitalWrite(red_led,0)
 		digitalWrite(buzzer,0)
-		relay_all_off
+		relay_all_off()
 		break

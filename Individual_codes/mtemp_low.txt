@@ -1,0 +1,1 @@
+(switchonfan1 temp_high t_high t_high)

@@ -1,0 +1,1 @@
+(lighton human_yes pir_yes pir_yes)
