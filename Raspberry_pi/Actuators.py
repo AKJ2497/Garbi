@@ -18,8 +18,8 @@ from relay_lib_seeed import *
 #########################################################################################################################################
 # Declaring variables and pin-outs
 
-ultra_1 = 4
-ultra_2 = 6
+ultra_1 = 6
+ultra_2 = 4
 a = 0
 angle = 90
 percentage = 0
@@ -63,7 +63,7 @@ def SetAngle(angle):
 # Defining percentage for Bin Fill Status 
 def Percentage(dist):   
     #Read distance value from Ultrasonic
-    percentage = 100 * (6 - dist)/6
+    percentage = 100 * (5 - dist)/5
     return percentage
 
 ##########################################################################################################################################

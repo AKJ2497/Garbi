@@ -28,6 +28,8 @@ buzzer = 3
 
 alert = 0
 motion = 0
+Fan1 = "OFF"
+Fan2 = "OFF"
 
 pinMode(pir_sensor,"INPUT")
 pinMode(led,"OUTPUT")
@@ -102,7 +104,7 @@ def fan2(mode):
 	print("Fan2 :"+str(mode))
 	if(str(mode)=='off'):
 		relay_off(4)
-	
+		
 	if(str(mode)=='on'):
 		relay_on(4)
 		
@@ -118,7 +120,7 @@ while 1==1:
 			dt_string=now.strftime("%d/%m/%Y %H:%M:%S")
 			motion = digitalRead(pir_sensor)
 			temp_value = random.randint(20,150)   #Simulated temperature for worst case situation
-			hum_value = random.randint(0,50)      #Simulated Humidity for worst case situation
+			hum_value = random.randint(30,100)      #Simulated Humidity for worst case situation
 			airquality = random.randint(20,300)	  #Simulated airquality sensor and also for worst case situation		
 
 			#[ temp_value,hum_value ] = dht(dht_sensor,0)  # True Temperature and Humidity from DHT sensor
@@ -143,6 +145,7 @@ while 1==1:
 					fan1('off')
 					print('relay_off(3)')
 				print(fan1_action)
+				Fan1 = "OFF"
 			
 			elif 25 <= temp_value <= 70:
 				problem = 'mtemp_pb2.pddl'
@@ -153,12 +156,14 @@ while 1==1:
 					fan1('on')
 					print('relay_on(3)')
 				print(fan1_action)
+				Fan1 = "ON"
 			
 			else:
 				alert = 1
 				print("Fire in the Garbi Plant: EMERGENCY, RUN FOR YOUR LIFE!") #publish directly to dashboard
 				setRGB(255,0,0)
 				setText("EMERGENCY! FIRE ALERT")
+				time.sleep(1)
 				digitalWrite(red_led,1)
 				digitalWrite(buzzer,1)
 				time.sleep(2)
@@ -175,7 +180,8 @@ while 1==1:
 					fan2('on')
 					print('relay_on(4)')
 				print(fan2_action)
-			
+				Fan2 = "OFF"
+
 			elif 0<= airquality <=100:
 				problem = 'mAQ_pb2.pddl'
 				filename = 'mAQ_fanoff.txt'
@@ -185,11 +191,13 @@ while 1==1:
 					fan2('off')
 					print('relay_off(4)')
 				print(fan2_action)
+				Fan2 = "ON"
 			else:
 				alert =2
 				print("Bad Air Quality in the Garbi Plant: EMERGENCY, WEAR MASK") #publish directly to dashboard
 				setRGB(120,135,0)
 				setText("EMERGENCY! BAD AIR QUALITY")
+				time.sleep(1)
 				digitalWrite(red_led,1)
 				digitalWrite(buzzer,1)
 				time.sleep(2)
@@ -222,9 +230,12 @@ while 1==1:
 			paylodmsg1 = "\"datetime\": \""
 			paylodmsg2 = "\", \"Temperature\":"
 			paylodmsg3 = ", \"Humidity\":"
-			paylodmsg4 = ", \"Air_Quality\":"
-			paylodmsg5 = "}"
-			paylodmsg = "{} {} {} {} {} {} {} {} {} {}".format(paylodmsg0, paylodmsg1, dt_string, paylodmsg2, temp_value, paylodmsg3, hum_value, paylodmsg4, airquality, paylodmsg5)
+			paylodmsg4 = ", \"Fan1\":"
+			paylodmsg5 = ", \"Fan2\":"
+			paylodmsg6 = ", \"Air_Quality\":"
+			paylodmsg7 = ", \"Alert\":"
+			paylodmsg8 = "}"
+			paylodmsg = "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(paylodmsg0, paylodmsg1, dt_string, paylodmsg2, temp_value, paylodmsg3, hum_value, paylodmsg4, Fan1, paylodmsg5, Fan2, paylodmsg6, airquality, paylodmsg7, alert, paylodmsg8)
 			paylodmsg = json.dumps(paylodmsg) 
 			paylodmsg_json = json.loads(paylodmsg)       
 			mqttc.publish("Sensor_Data", paylodmsg_json , qos=1)        # topic: Sensor_Data # Publishing sensor values
