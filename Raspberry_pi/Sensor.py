@@ -28,8 +28,8 @@ buzzer = 3
 
 alert = 0
 motion = 0
-Fan1 = "OFF"
-Fan2 = "OFF"
+Fan1 = "off"
+Fan2 = "off"
 
 pinMode(pir_sensor,"INPUT")
 pinMode(led,"OUTPUT")
@@ -145,7 +145,7 @@ while 1==1:
 					fan1('off')
 					print('relay_off(3)')
 				print(fan1_action)
-				Fan1 = "OFF"
+				Fan1 = "off"
 			
 			elif 25 <= temp_value <= 70:
 				problem = 'mtemp_pb2.pddl'
@@ -156,7 +156,7 @@ while 1==1:
 					fan1('on')
 					print('relay_on(3)')
 				print(fan1_action)
-				Fan1 = "ON"
+				Fan1 = "on"
 			
 			else:
 				alert = 1
@@ -180,7 +180,7 @@ while 1==1:
 					fan2('on')
 					print('relay_on(4)')
 				print(fan2_action)
-				Fan2 = "OFF"
+				Fan2 = "off"
 
 			elif 0<= airquality <=100:
 				problem = 'mAQ_pb2.pddl'
@@ -191,7 +191,7 @@ while 1==1:
 					fan2('off')
 					print('relay_off(4)')
 				print(fan2_action)
-				Fan2 = "ON"
+				Fan2 = "on"
 			else:
 				alert =2
 				print("Bad Air Quality in the Garbi Plant: EMERGENCY, WEAR MASK") #publish directly to dashboard
