@@ -28,8 +28,8 @@ buzzer = 3
 
 alert = 0
 motion = 0
-Fan1 = "off"
-Fan2 = "off"
+Fan1 = 0
+Fan2 = 0
 
 pinMode(pir_sensor,"INPUT")
 pinMode(led,"OUTPUT")
