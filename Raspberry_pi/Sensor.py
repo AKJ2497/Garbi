@@ -119,12 +119,11 @@ while 1==1:
 			now = datetime.now()
 			dt_string=now.strftime("%d/%m/%Y %H:%M:%S")
 			motion = digitalRead(pir_sensor)
-			temp_value = random.randint(20,150)   #Simulated temperature for worst case situation
-			hum_value = random.randint(30,100)      #Simulated Humidity for worst case situation
+			[ temp_value,hum_value ] = dht(dht_sensor,0)  # True Temperature and Humidity from DHT sensor
+			time.sleep(1.5)
+			#temp_value = random.randint(20,150)   #Simulated temperature for worst case situation
+			#hum_value = random.randint(30,100)      #Simulated Humidity for worst case situation
 			airquality = random.randint(20,300)	  #Simulated airquality sensor and also for worst case situation		
-
-			#[ temp_value,hum_value ] = dht(dht_sensor,0)  # True Temperature and Humidity from DHT sensor
-			#time.sleep(1)
 
 			t=str(temp_value)
 			h=str(hum_value)
@@ -166,7 +165,7 @@ while 1==1:
 				time.sleep(1)
 				digitalWrite(red_led,1)
 				digitalWrite(buzzer,1)
-				time.sleep(2)
+				time.sleep(1)
 				digitalWrite(red_led,0)
 				digitalWrite(buzzer,0)
 				
