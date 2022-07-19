@@ -51,7 +51,7 @@ def on_message(client, userdata, msg):                      # Func for Sending m
 mqttc = paho.Client()                                       # mqttc object
 mqttc.on_connect = on_connect                               # assign on_connect func
 mqttc.on_message = on_message                               # assign on_message func
-mqttc.connect('192.168.0.145',1883,keepalive=60)            # connect to pi
+mqttc.connect('192.168.38.125',1883,keepalive=60)            # connect to pi
 mqttc.loop_start() 
 
 ########################################################################################################################################
@@ -117,18 +117,18 @@ while 1==1:
 		if connflag == True:
 			PIR(pir_sensor)
 			now = datetime.now()
-			dt_string=now.strftime("%d/%m/%Y %H:%M:%S")
+			dt_string  = now.strftime("%d/%m/%Y %H:%M:%S")
 			motion = digitalRead(pir_sensor)
-			temp_value = random.randint(20,150)   #Simulated temperature for worst case situation
-			hum_value = random.randint(30,100)      #Simulated Humidity for worst case situation
-			airquality = random.randint(20,300)	  #Simulated airquality sensor and also for worst case situation		
+			#temp_value = random.randint(15,120)       #Simulated temperature for worst case situation
+			#hum_value = random.randint(30,100)        #Simulated Humidity for worst case situation
+			airquality = random.randint(0,200)          #Simulate Airquality for normal operation  
+			#airquality = random.randint(0,250)	  #Simulated airquality sensor and also for worst case situation		
 
-			#[ temp_value,hum_value ] = dht(dht_sensor,0)  # True Temperature and Humidity from DHT sensor
-			#time.sleep(1)
-
+			[ temp_value,hum_value ] = dht(dht_sensor,0)  # True Temperature and Humidity from DHT sensor
+			time.sleep(1)
 			t=str(temp_value)
 			h=str(hum_value)
-			setRGB(0,255,0)                        #Displaying on RGB LCD Display   
+			setRGB(0,255,0)
 			setText("Temp:" + t +"C        " + "Humidity:" + h + "%")
 			time.sleep(2)
 
@@ -136,7 +136,7 @@ while 1==1:
 			domain = 'master_domain.pddl'
 
 			# Temperature PDDL
-			if temp_value < 25:
+			if temp_value<25:
 				problem = 'mtemp_pb1.pddl'
 				filename = 'mtemp_high.txt'
 				fan1_action = Planner(domain, problem, filename)
@@ -147,7 +147,7 @@ while 1==1:
 				print(fan1_action)
 				Fan1 = 0
 			
-			elif 25 <= temp_value <= 70:
+			elif 25<=temp_value<=70:
 				problem = 'mtemp_pb2.pddl'
 				filename = 'mtemp_low.txt'
 				fan1_action = Planner(domain, problem, filename)
@@ -158,20 +158,30 @@ while 1==1:
 				print(fan1_action)
 				Fan1 = 1
 			
-			else:
+			elif temp_value>70:
 				alert = 1
 				print("Fire in the Garbi Plant: EMERGENCY, RUN FOR YOUR LIFE!") #publish directly to dashboard
-				setRGB(255,0,0)
-				setText("EMERGENCY! FIRE ALERT")
-				time.sleep(1)
 				digitalWrite(red_led,1)
 				digitalWrite(buzzer,1)
+				setRGB(255,0,0)
+				setText("EMERGENCY! FIRE ALERT")				
 				time.sleep(2)
 				digitalWrite(red_led,0)
 				digitalWrite(buzzer,0)
 				
 			#Air Quality PDDL
-			if 100 < airquality <=200:
+			if 0<=airquality<=100:
+				problem = 'mAQ_pb2.pddl'
+				filename = 'mAQ_fanoff.txt'
+				fan2_action = Planner(domain, problem, filename)
+				print("OFF plan created")
+				if str(fan2_action) == "(switchofffan2 aq_good aq_good aq_good)":
+					fan2('off')
+					print('relay_off(4)')
+				print(fan2_action)
+				Fan2 = 1
+
+			elif 100<airquality<=200:
 				problem = 'mAQ_pb1.pddl'
 				filename = 'mAQ_fanon.txt'
 				fan2_action = Planner(domain, problem, filename)
@@ -182,24 +192,13 @@ while 1==1:
 				print(fan2_action)
 				Fan2 = 0
 
-			elif 0<= airquality <=100:
-				problem = 'mAQ_pb2.pddl'
-				filename = 'mAQ_fanoff.txt'
-				fan2_action = Planner(domain, problem, filename)
-				print("OFF plan created")
-				if str(fan2_action) == "(switchofffan2 aq_good aq_good aq_good)":
-					fan2('off')
-					print('relay_off(4)')
-				print(fan2_action)
-				Fan2 = 1
-			else:
+			elif 200<airquality<=300 :
 				alert =2
 				print("Bad Air Quality in the Garbi Plant: EMERGENCY, WEAR MASK") #publish directly to dashboard
-				setRGB(120,135,0)
-				setText("EMERGENCY! BAD AIR QUALITY")
-				time.sleep(1)
 				digitalWrite(red_led,1)
 				digitalWrite(buzzer,1)
+				setRGB(120,135,0)
+				setText("EMERGENCY! BAD AIR QUALITY")
 				time.sleep(2)
 				digitalWrite(red_led,0)
 				digitalWrite(buzzer,0)
@@ -250,7 +249,7 @@ while 1==1:
 
 	except KeyboardInterrupt:
 		setRGB(0,0,0)
-		setText(' ')
+		setText('-')
 		digitalWrite(led,0)
 		digitalWrite(red_led,0)
 		digitalWrite(buzzer,0)

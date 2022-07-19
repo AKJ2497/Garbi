@@ -48,7 +48,7 @@ def on_message(client, userdata, msg):                      # Func for Sending m
 mqttc = paho.Client()                                       # mqttc object
 mqttc.on_connect = on_connect                               # assign on_connect func
 mqttc.on_message = on_message                               # assign on_message func
-mqttc.connect('192.168.0.145',1883,keepalive=60)            # connect to pi
+mqttc.connect('192.168.38.125',1883,keepalive=60)            # connect to pi
 mqttc.loop_start() 
 
 #############################################################################################################################################
@@ -74,16 +74,16 @@ while True:
 		dt_string=now.strftime("%d/%m/%Y %H:%M:%S")
 		dist_1 = ultrasonicRead(ultra_1)
 		print("Distance",dist_1)
-		if dist_1 <= 4:
+		if dist_1 <= 2.5:
 			a = random.randint(0,1)
 			print("a=",a)
 			if a%2 == 0:
 				angle = 0
 				SetAngle(angle)
 				relay_on(1)
-				time.sleep(0.15)
+				time.sleep(3)
 				relay_off(1)
-				time.sleep(2)
+				time.sleep(0.5)
 				biodist = ultrasonicRead(ultra_2)
 				print("Bio Distance=", biodist)
 				biostatus = Percentage(biodist)
@@ -96,9 +96,9 @@ while True:
 				angle = 180
 				SetAngle(angle)
 				relay_on(1)
-				time.sleep(0.15)
+				time.sleep(3)
 				relay_off(1)
-				time.sleep(2)
+				time.sleep(0.5)
 				non_biodist = ultrasonicRead(ultra_2)
 				print("Non-Bio Distance=", non_biodist)
 				non_biostatus = Percentage(non_biodist)
