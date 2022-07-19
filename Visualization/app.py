@@ -53,7 +53,7 @@ mqtt_subscriber= paho.Client()
 mqtt_subscriber.on_message= on_message
 mqtt_subscriber.on_connect= on_connect
 
-mqtt_subscriber.connect("192.168.0.145", 1883, 60)
+mqtt_subscriber.connect("192.168.38.125", 1883, 60)
   
 mqtt_subscriber.loop_start()
 #############################################################################################################################################
@@ -80,7 +80,6 @@ while 1 == 1:
         Nonbiobinstatus = int(sensor_data["nonbio"])
         Alert = int(sensor_data["alert"])
         print("TEMP=", Temperature, "HUM=", Humidity, "AQ=", Airquality, "Bio=", Biobinstatus, "Nbio=", Nonbiobinstatus, "F1=", Fan1, "F2=", Fan2, "alert=", Alert)
-        #data = [time() * 1000, Temperature, Humidity, Airquality, Biobinstatus, Nonbiobinstatus, Fan1, Fan2]
         data = [time() * 1000, Temperature, Humidity, Airquality, Biobinstatus, Nonbiobinstatus, Fan1, Fan2, Alert]
         print(data)
 
