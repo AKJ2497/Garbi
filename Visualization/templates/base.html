@@ -37,29 +37,28 @@
     <br>
 
     <div class="container-fluid">
-</div>
+
         <div class="row">
 
-            <div class="col-8 jumbotron p-3 mx-2">
+            <div class="col-9 jumbotron p-2 mx-1">
                 <h1 class="sensor1"> Bio Bin Status : </h1>
                 <br>
                 <h1 class="sensor2"> Temperature : </h1>
                 <br>
                 <h1 class="sensor3"> Humidity : </h1>
                 <br>
-                <h1 class="sensor4"> Air Quality : </h1>
-                <br>
-                
+                <h1 class="sensor4"> Air Quality : </h1>                
             </div>
             <br>
 
-            <div class="col-8 jumbotron p-2 mx-1">
+            <div class="col-9 jumbotron p-2 mx-1">
                 <h1 class="sensor5"> Non-Bio Bin Status : </h1>
                 <br>
-                <h1 class="actuator1"> HVAC Exhaust Fan : </h1>
+                <h1 class="actuator1"> Fan1 : </h1>
                 <br>
-                <h1 class="actuator2"> Safety Alert System : </h1>
+                <h1 class="actuator2"> Fan2 : </h1>
                 <br>
+                <h1 class="actuator3"> Safety Alert System : </h1>
             </div>
             <br>
 
@@ -138,7 +137,19 @@
             </div>
         </div>
     </div>
+<br>
+<br>
+<br>
 
+    <div class="container-fluid">
+        <!-- Example row of columns -->
+        <div class="row">
+            <div class="container-fluid" id="data-alert">
+
+            </div>
+        </div>
+    </div>
+       
     <script>
         var chartTemperatue;
         var chartHumidity;
@@ -194,13 +205,19 @@
                 data5.push(result[0]);
                 data5.push(result[5]);
 
-
                 chartTemperatue.series[0].addPoint(data1, true, shiftTemperature);
                 chartHumidity.series[0].addPoint(data2, true, shiftHumidity);
                 chartAirquality.series[0].addPoint(data3, true, shiftAirquality);
-                $(".sensor1").text("");
-                $(".sensor1").text("Bio Bin Status : " +  Math.round(data4[1]) + " %" );
 
+                $(".sensor1").text("");
+                if(Math.round(data5[1]) >= 80){
+                    $(".sensor1").text("Bio Bin Status : " + Math.round(data5[1]) + " %").css('backgroundColor', 'red');
+                }
+                if(Math.round(data5[1]) < 80){
+                    $(".sensor1").text("Bio Bin Status : " + Math.round(data5[1]) + " %").css('backgroundColor','white');    
+                }
+                $(".sensor1").text("Bio Bin Status : " + Math.round(data5[1]) + " %");
+                    
                 $(".sensor2").text("");
                 $(".sensor2").text("Temperature : " +  Math.round(data1[1]) + " C");
 
@@ -211,13 +228,22 @@
                 $(".sensor4").text("Air Quality : " +  Math.round(data3[1]) + " AQI");
 
                 $(".sensor5").text("");
-                $(".sensor5").text("Non-bio Bin Status : " +  Math.round(data5[1]) + "%" );
+                if(Math.round(data4[1]) >= 80){
+                    $(".sensor5").text("Non-bio Bin Status : " +  Math.round(data4[1]) + "%" ).css('backgroundColor', 'red');
+                }
+                if(Math.round(data4[1]) < 80){
+                    $(".sensor5").text("Non-bio Bin Status : " +  Math.round(data4[1]) + "%" ).css('backgroundColor','white');
+                }
+                $(".sensor5").text("Non-bio Bin Status : " +  Math.round(data4[1]) + "%" );
 
                 $(".actuator1").text("");
-                $(".actuator1").text("HVAC Exhaust Fan : " +  result[6] );
+                $(".actuator1").text("Fan1 : " +  result[6] );
 
                 $(".actuator2").text("");
-                $(".actuator2").text("Safety Alert System : " +  result[7] );
+                $(".actuator2").text("Fan2 : " +  result[7] );
+
+                $(".actuator3").text("");
+                $(".actuator3").text("Safety Alert System: EMERGENCY ALERT!" +"  "+ result[8] + " ALERT!" +"  "+  result[8] );
 
                 // call it again after one second
                 setTimeout(requestData, 5000);

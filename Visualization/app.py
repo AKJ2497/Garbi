@@ -16,9 +16,8 @@ from time import time
 sensor_data = {"temp": 0,
                "humid": 0,
                "airquality": 0,
-               "light": 0,
-               "fan": "off",
-               "led": "ON",
+               "fan_1": 0,
+               "fan_2": 0,
                "bio": 0,
                "nonbio": 0,
                "alert": 0 }
@@ -32,8 +31,7 @@ app: Flask = Flask(__name__)
 
 def on_connect(client, userdata, flags, rc):  # func for making connection
     print("Connection returned result: " +str(rc))
-    #client.subscribe([("Sensor_Data", 1), ("Actuator_Data", 1), ("Actions", 1)])
-    client.subscribe([("Sensor_Data", 1), ("Actuator_Data", 1)])
+    client.subscribe([("Sensor_Data", 0), ("Actuator_Data", 0)])
 
 def on_message(client, userdata, msg): # Func for receiving msgs
     a = msg.topic
@@ -41,8 +39,11 @@ def on_message(client, userdata, msg): # Func for receiving msgs
         t = json.loads(str(msg.payload.decode("utf-8")))
         sensor_data["temp"] = t["Temperature"]
         sensor_data["humid"] = t["Humidity"]
+        sensor_data["fan_1"] = t["Fan1"]
+        sensor_data["fan_2"] = t["Fan2"]
         sensor_data["airquality"] = t["Air_Quality"]
-        
+        sensor_data["alert"] = t["Alert"]
+
     if a == "Actuator_Data":
         t = json.loads(str(msg.payload.decode("utf-8")))
         sensor_data["bio"] = t["Bio_Status"]
@@ -66,19 +67,21 @@ while 1 == 1:
 
     @app.route('/data', methods=["GET", "POST"])
     def data():
+        
         # Data Format
         # [TIME, Temperature, Humidity]
 
         Temperature = int(sensor_data["temp"])
         Humidity = int(sensor_data["humid"])
         Airquality = int(sensor_data["airquality"])
+        Fan1 = int(sensor_data["fan_1"])
+        Fan2 = int(sensor_data["fan_2"])
         Biobinstatus = int(sensor_data["bio"])
         Nonbiobinstatus = int(sensor_data["nonbio"])
-        Light = int(sensor_data["light"])
-        #Fan = str(sensor_data["fan"])
-        #data = [time() * 1000, Temperature, Humidity, Airquality, Light, Fan, Servo, Safetyalertsystem]
-        print("TEMP=", Temperature, "HUM=", Humidity, "AQ=", Airquality, "Bio=", Biobinstatus, "Nbio=", Nonbiobinstatus)
-        data = [time() * 1000, Temperature, Humidity, Airquality, Biobinstatus, Nonbiobinstatus, Light]
+        Alert = int(sensor_data["alert"])
+        print("TEMP=", Temperature, "HUM=", Humidity, "AQ=", Airquality, "Bio=", Biobinstatus, "Nbio=", Nonbiobinstatus, "F1=", Fan1, "F2=", Fan2, "alert=", Alert)
+        #data = [time() * 1000, Temperature, Humidity, Airquality, Biobinstatus, Nonbiobinstatus, Fan1, Fan2]
+        data = [time() * 1000, Temperature, Humidity, Airquality, Biobinstatus, Nonbiobinstatus, Fan1, Fan2, Alert]
         print(data)
 
         response = make_response(json.dumps(data))
